@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  freecrawl:
+    build: .
+    ports:
+      - "9100:9100"
+    environment:
+      - FREECRAWL_ENGINE=auto
+      - FREECRAWL_HEADLESS=false
+      - FREECRAWL_CHANNEL=chromium
+      - FREECRAWL_PORT=9100
+      # Optional: set proxy
+      # - FREECRAWL_PROXY_URL=http://user:pass@host:port
+      # Optional: protect API
+      # - FREECRAWL_API_KEY=your-secret-key
+    restart: unless-stopped
+    shm_size: "2gb"  # Important for browser mode
+
+  # Optional: Flaresolverr for Cloudflare bypass
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    ports:
+      - "8191:8191"
+    restart: unless-stopped

@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+dist/
+build/
+.cache/
+/tmp/
+*.log
+.env
+.freecrawl-cache
