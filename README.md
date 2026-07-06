@@ -1,65 +1,68 @@
-# Freecrawl
+# 🔥 Freecrawl
 
 > Open-source web scraping API with anti-bot bypass. Drop-in Firecrawl alternative.
+> **AI-first**: MCP server, OpenAI tool definitions, REST API — any AI model can use it.
 > No API keys, no credits, no limits.
-
-## Features
-
-- **Anti-Bot Engine Chain**: httpx (fast) -> Flaresolverr (Cloudflare) -> Patchright (DataDome, Akamai, etc.)
-- **Auto-Escalation**: Automatically tries faster engines first, falls back to anti-bot browsers
-- **Multiple Output Formats**: Markdown, HTML, text, JSON-LD, links, images
-- **BFS Site Crawler**: Discover pages via links + sitemap.xml
-- **CSS Extraction**: Extract structured data with CSS selectors
-- **JS Actions**: Click, scroll, type, evaluate before extracting
-- **Screenshots**: Full-page screenshots
-- **Proxy Support**: Single proxy or rotation pool
-- **Caching**: Avoid redundant requests
-- **REST API**: Firecrawl-compatible endpoints
-- **CLI**: Scrape from terminal
-- **Docker**: One-command deployment
 
 ## Quick Start
 
 ```bash
-# Install
 pip install -r requirements.txt
 patchright install chromium
+python -m freecrawl serve  # REST API on :9100
+```
 
-# CLI scrape
-python -m freecrawl scrape https://example.com
+## AI Integration
 
-# Start API server
-python -m freecrawl serve
+### MCP Server (Claude, Cursor, any MCP client)
+```json
+{"mcpServers":{"freecrawl":{"command":"python","args":["-m","freecrawl.mcp_server"]}}}
+```
 
-# API call
+### OpenAI Tool Definitions
+```python
+from freecrawl.ai_tools import get_tools
+tools = get_tools()  # 9 tool definitions, pass to any LLM
+```
+
+### REST API
+```bash
 curl -X POST http://localhost:9100/v1/scrape \
   -H "Content-Type: application/json" \
-  -d '{"url": "https://example.com", "formats": ["markdown", "links"]}'
+  -d '{"url":"https://example.com","formats":["markdown"]}'
 ```
 
-## Docker
+## Features
 
-```bash
-docker-compose up -d
+| Feature | Status |
+|---------|:------:|
+| Scrape (URL→Markdown/HTML/text) | ✅ |
+| Anti-bot bypass (Cloudflare, DataDome) | ✅ |
+| Auto-escalation engine chain | ✅ |
+| Crawl (BFS + sitemap) | ✅ |
+| Search (DuckDuckGo/SearXNG) | ✅ |
+| Map (fast URL discovery) | ✅ |
+| Batch scrape (parallel) | ✅ |
+| LLM extraction (structured JSON) | ✅ |
+| Change tracking (diff) | ✅ |
+| PDF parsing | ✅ |
+| CSS extraction | ✅ |
+| Screenshots | ✅ |
+| JS actions (click/scroll/type) | ✅ |
+| Product/Menu/Branding extractors | ✅ |
+| Summary (LLM) | ✅ |
+| Proxy rotation | ✅ |
+| MCP server | ✅ |
+| OpenAI tool definitions | ✅ |
+| Docker deployment | ✅ |
+| CLI tool | ✅ |
+
+## Architecture
+
 ```
-
-## API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/v1/scrape` | POST | Scrape single URL |
-| `/v1/crawl` | POST | Crawl entire site |
-| `/v1/extract` | POST | Structured data extraction |
-| `/v1/status` | GET | Engine status |
-| `/health` | GET | Health check |
-
-## Engine Comparison
-
-| Engine | Speed | Anti-Bot | JS | Cost |
-|--------|-------|----------|----|------|
-| httpx | Fastest | None | No | Free |
-| flaresolverr | Medium | Cloudflare | No | Free |
-| patchright | Slowest | DataDome, Akamai, Cloudflare | Yes | Free |
+Engine Chain (auto-escalation):
+  httpx (fast) → flaresolverr (Cloudflare) → patchright (DataDome/Akamai)
+```
 
 ## License
 
